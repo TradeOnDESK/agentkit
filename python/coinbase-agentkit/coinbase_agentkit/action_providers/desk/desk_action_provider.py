@@ -1,26 +1,40 @@
-"""DESK action provider"""
+"""DESK action provider."""
 
 import json
 from typing import Any
+
 from cdp import Network
 from desk.auth import Auth
-from desk.info import Info
-from desk.exchange import Exchange
 from desk.constant.common import CHAIN_ID
+from desk.enum import OrderType, TimeInForce
+from desk.exchange import Exchange
+from desk.info import Info
 from eth_account import Account
-from .schemas import DepositCollateralSchema, GetCurrentFundingRateSchema, GetHistoricalFundingRatesSchema, GetLastTradesSchema, PlaceOrderSchema, CancelOrderSchema, CancelAllOrdersSchema, WithdrawCollateralSchema
 
-from coinbase_agentkit.network.network import base, arbitrum_sepolia
+from coinbase_agentkit.network.network import arbitrum_sepolia, base
+
 from ..action_decorator import create_action
 from ..action_provider import ActionProvider
+from .schemas import (
+    CancelAllOrdersSchema,
+    CancelOrderSchema,
+    DepositCollateralSchema,
+    GetCurrentFundingRateSchema,
+    GetHistoricalFundingRatesSchema,
+    GetLastTradesSchema,
+    PlaceOrderSchema,
+    WithdrawCollateralSchema,
+)
 
-SUPPORTED_CHAINS = list(map(lambda x: str(x), set(CHAIN_ID.values())))
+SUPPORTED_CHAINS = list({str(chain_id) for chain_id in CHAIN_ID.values()})
 
 
 class DeskActionProvider(ActionProvider):
     """Action provider for DESK trading platform operations."""
 
-    def __init__(self,  private_key: str, sub_account_id: str, chain_id: str, rpc_url: str | None = None):
+    def __init__(
+        self, private_key: str, sub_account_id: str, chain_id: str, rpc_url: str | None = None
+    ):
         """Initialize the DESK action provider."""
         super().__init__("desk", [])
 
@@ -29,7 +43,9 @@ class DeskActionProvider(ActionProvider):
             assert private_key, "You must set the PRIVATE_KEY environment variable"
 
             assert chain_id, "You must set the CHAIN_ID environment variable"
-            assert chain_id in SUPPORTED_CHAINS, f"Unsupported chain ID: {chain_id}. Only {SUPPORTED_CHAINS} are supported"
+            assert (
+                chain_id in SUPPORTED_CHAINS
+            ), f"Unsupported chain ID: {chain_id}. Only {SUPPORTED_CHAINS} are supported"
 
             assert sub_account_id, "You must set the SUB_ACCOUNT_ID environment variable"
 
@@ -39,8 +55,11 @@ class DeskActionProvider(ActionProvider):
             if rpc_url:
                 self.rpc_url = rpc_url
             else:
-                self.rpc_url = base.rpc_urls["default"].http[
-                    0] if chain_id == base.id else arbitrum_sepolia.rpc_urls["default"].http[0]
+                self.rpc_url = (
+                    base.rpc_urls["default"].http[0]
+                    if chain_id == base.id
+                    else arbitrum_sepolia.rpc_urls["default"].http[0]
+                )
 
             self.network = "mainnet" if chain_id == base.id else "testnet"
             self.sub_account_id = int(sub_account_id)
@@ -52,7 +71,7 @@ class DeskActionProvider(ActionProvider):
                 rpc_url=self.rpc_url,
                 account=self.account,
                 sub_account_id=self.sub_account_id,
-                private_key=self.private_key
+                private_key=self.private_key,
             )
 
             self.info = Info(network=self.network, skip_ws=True)
@@ -72,15 +91,14 @@ class DeskActionProvider(ActionProvider):
     )
     def get_subaccount_summary(self, args: dict[str, Any]) -> str:
         """Get the summary of the subaccount."""
-        res = self.info.get_subaccount_summary(
-            self.account, self.sub_account_id)
+        res = self.info.get_subaccount_summary(self.account, self.sub_account_id)
         return json.dumps(res, indent=4)
 
     @create_action(
         name="get_market_info",
         description="""
         Get the market info.
-        """
+        """,
     )
     def get_market_info(self, args: dict[str, Any]) -> str:
         """Get the market info."""
@@ -91,7 +109,7 @@ class DeskActionProvider(ActionProvider):
         name="get_collaterals_info",
         description="""
         Get the collaterals info.
-        """
+        """,
     )
     def get_collaterals_info(self, args: dict[str, Any]) -> str:
         """Get the collaterals info."""
@@ -106,7 +124,7 @@ class DeskActionProvider(ActionProvider):
         Args:
             symbol (str): market symbol to get funding rates for
         """,
-        schema=GetCurrentFundingRateSchema
+        schema=GetCurrentFundingRateSchema,
     )
     def get_current_funding_rate(self, args: dict[str, Any]) -> str:
         """Get the current funding rate."""
@@ -122,11 +140,13 @@ class DeskActionProvider(ActionProvider):
             start_time (int): start time in seconds
             end_time (int): end time in seconds
         """,
-        schema=GetHistoricalFundingRatesSchema
+        schema=GetHistoricalFundingRatesSchema,
     )
     def get_historical_funding_rates(self, args: dict[str, Any]) -> str:
         """Get the historical funding rates."""
-        res = self.info.get_historical_funding_rates(symbol=args["symbol"], start_time=args["start_time"], end_time=args["end_time"])
+        res = self.info.get_historical_funding_rates(
+            symbol=args["symbol"], start_time=args["start_time"], end_time=args["end_time"]
+        )
         return json.dumps(res, indent=4)
 
     @create_action(
@@ -137,7 +157,7 @@ class DeskActionProvider(ActionProvider):
         Args:
             symbol (str): market symbol to get trades for
         """,
-        schema=GetLastTradesSchema
+        schema=GetLastTradesSchema,
     )
     def get_last_trades(self, args: dict[str, Any]) -> str:
         """Get the most recent trades."""
@@ -148,7 +168,7 @@ class DeskActionProvider(ActionProvider):
         name="get_mark_price",
         description="""
         Get the current mark price.
-        """
+        """,
     )
     def get_mark_price(self, args: dict[str, Any]) -> str:
         """Get the current mark price."""
@@ -172,22 +192,21 @@ class DeskActionProvider(ActionProvider):
             wait_for_reply (bool): should api wait for reply
             client_order_id (Optional[str]): client order id (max alphanumeric 36 characters)
         """,
-        schema=PlaceOrderSchema
+        schema=PlaceOrderSchema,
     )
     def place_order(self, args: dict[str, Any]) -> str:
         """Place an order."""
-        print(json.dumps(args, indent=4))
         res = self.exchange.place_order(
             amount=args["amount"],
             price=args["price"],
             side=args["side"],
             symbol=args["symbol"],
-            order_type=args["order_type"] if "order_type" in args else "Market",
-            reduce_only=args["reduce_only"] if "reduce_only" in args else False,
-            trigger_price=args["trigger_price"] if "trigger_price" in args else None,
-            time_in_force=args["time_in_force"] if "time_in_force" in args else None,
-            wait_for_reply=args["wait_for_reply"] if "wait_for_reply" in args else True,
-            client_order_id=args["client_order_id"] if "client_order_id" in args else None
+            order_type=args.get("order_type", OrderType.MARKET),
+            reduce_only=args.get("reduce_only", False),
+            trigger_price=args.get("trigger_price"),
+            time_in_force=args.get("time_in_force", TimeInForce.GTC),
+            wait_for_reply=args.get("wait_for_reply", True),
+            client_order_id=args.get("client_order_id"),
         )
         return json.dumps(res, indent=4)
 
@@ -203,16 +222,16 @@ class DeskActionProvider(ActionProvider):
             wait_for_reply (bool): should api wait for reply
             client_order_id (str): client order id to cancel
         """,
-        schema=CancelOrderSchema
+        schema=CancelOrderSchema,
     )
     def cancel_order(self, args: dict[str, Any]) -> str:
         """Cancel an order."""
         res = self.exchange.cancel_order(
             symbol=args["symbol"],
-            is_conditional_order=args["is_conditional_order"] if "is_conditional_order" in args else True,
-            order_digest=args["order_digest"] if "order_digest" in args else None,
-            wait_for_reply=args["wait_for_reply"] if "wait_for_reply" in args else True,
-            client_order_id=args["client_order_id"] if "client_order_id" in args else None
+            is_conditional_order=args.get("is_conditional_order", True),
+            order_digest=args.get("order_digest"),
+            wait_for_reply=args.get("wait_for_reply", True),
+            client_order_id=args.get("client_order_id"),
         )
         return json.dumps(res, indent=4)
 
@@ -226,14 +245,14 @@ class DeskActionProvider(ActionProvider):
             is_conditional_order (bool): whether the order is a conditional order
             wait_for_reply (bool): should api wait for reply
         """,
-        schema=CancelAllOrdersSchema
+        schema=CancelAllOrdersSchema,
     )
     def cancel_all_orders(self, args: dict[str, Any]) -> str:
         """Cancel all orders."""
         res = self.exchange.cancel_all_orders(
-            symbol=args["symbol"] if "symbol" in args else None,
-            is_conditional_order=args["is_conditional_order"] if "is_conditional_order" in args else True,
-            wait_for_reply=args["wait_for_reply"] if "wait_for_reply" in args else True
+            symbol=args.get("symbol"),
+            is_conditional_order=args.get("is_conditional_order", True),
+            wait_for_reply=args.get("wait_for_reply", True),
         )
         return json.dumps(res, indent=4)
 
@@ -249,14 +268,11 @@ class DeskActionProvider(ActionProvider):
         Returns:
             transaction hash: str
         """,
-        schema=DepositCollateralSchema
+        schema=DepositCollateralSchema,
     )
     def deposit_collateral(self, args: dict[str, Any]) -> str:
         """Deposit collateral."""
-        res = self.exchange.deposit_collateral(
-            asset=args["asset"],
-            amount=args["amount"]
-        )
+        res = self.exchange.deposit_collateral(asset=args["asset"], amount=args["amount"])
         return json.dumps(res, indent=4)
 
     @create_action(
@@ -271,14 +287,11 @@ class DeskActionProvider(ActionProvider):
         Returns:
             transaction hash: str
         """,
-        schema=WithdrawCollateralSchema
+        schema=WithdrawCollateralSchema,
     )
     def withdraw_collateral(self, args: dict[str, Any]) -> str:
         """Withdraw collateral."""
-        res = self.exchange.withdraw_collateral(
-            asset=args["asset"],
-            amount=args["amount"]
-        )
+        res = self.exchange.withdraw_collateral(asset=args["asset"], amount=args["amount"])
         return json.dumps(res, indent=4)
 
     def supports_network(self, network: Network) -> bool:
@@ -289,13 +302,15 @@ class DeskActionProvider(ActionProvider):
 
         Returns:
             bool: True if the network is supported, False otherwise.
+
         """
         return network.chain_id in SUPPORTED_CHAINS
 
 
-def desk_action_provider(private_key: str, sub_account_id: str, chain_id: str, rpc_url: str | None = None) -> DeskActionProvider:
+def desk_action_provider(
+    private_key: str, sub_account_id: str, chain_id: str, rpc_url: str | None = None
+) -> DeskActionProvider:
     """Create a new DeskActionProvider instance."""
-    return DeskActionProvider(private_key=private_key,
-                              sub_account_id=sub_account_id,
-                              chain_id=chain_id,
-                              rpc_url=rpc_url)
+    return DeskActionProvider(
+        private_key=private_key, sub_account_id=sub_account_id, chain_id=chain_id, rpc_url=rpc_url
+    )
