@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 import sys
 import time
 
@@ -11,11 +10,6 @@ from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from openrouter import ChatOpenRouter
-
-path_root = Path(__file__).parents[2]  # noqa
-sys.path.append(str(path_root)) # noqa
-sys.path.append(str(path_root)+"/coinbase-agentkit") # noqa
-sys.path.append(str(path_root)+"/framework-extensions/langchain") # noqa
 
 from coinbase_agentkit import (
     AgentKit,
