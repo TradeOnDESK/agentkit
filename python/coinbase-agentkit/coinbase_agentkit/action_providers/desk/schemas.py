@@ -29,7 +29,7 @@ class PlaceOrderSchema(BaseModel):
     order_type: str = Field(...,
                             description=f"The type of order ({[e.value for e in OrderType]})")
     reduce_only: bool | None = Field(
-        None, description="Whether the order is reduce-only")
+        None, description="Whether the order is reduce-only. Should be true if closing a position.")
     trigger_price: str | None = Field(
         None, description="The trigger price for stop orders")
     time_in_force: str | None = Field(

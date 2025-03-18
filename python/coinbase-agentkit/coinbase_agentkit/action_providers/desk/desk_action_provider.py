@@ -29,7 +29,7 @@ class DeskActionProvider(ActionProvider):
             assert private_key, "You must set the PRIVATE_KEY environment variable"
 
             assert chain_id, "You must set the CHAIN_ID environment variable"
-            assert chain_id in SUPPORTED_CHAINS, f"Only {SUPPORTED_CHAINS} are supported"
+            assert chain_id in SUPPORTED_CHAINS, f"Unsupported chain ID: {chain_id}. Only {SUPPORTED_CHAINS} are supported"
 
             assert sub_account_id, "You must set the SUB_ACCOUNT_ID environment variable"
 
@@ -162,11 +162,11 @@ class DeskActionProvider(ActionProvider):
 
         Args:
             amount (str): order amount
-            price (str): order price
+            price (str): order price (0 if market order)
             side (OrderSide): order side
             symbol (str): market symbol
             order_type (OrderType): order type
-            reduce_only (Optional[bool]): whether the order is a reduce only order
+            reduce_only (Optional[bool]): whether the order is a reduce only order (true if close position)
             trigger_price (Optional[str]): trigger price
             time_in_force (Optional[TimeInForce]): time in force
             wait_for_reply (bool): should api wait for reply
@@ -182,8 +182,8 @@ class DeskActionProvider(ActionProvider):
             price=args["price"],
             side=args["side"],
             symbol=args["symbol"],
-            order_type=args["order_type"] if "order_type" in args else None,
-            reduce_only=args["reduce_only"] if "reduce_only" in args else None,
+            order_type=args["order_type"] if "order_type" in args else "Market",
+            reduce_only=args["reduce_only"] if "reduce_only" in args else False,
             trigger_price=args["trigger_price"] if "trigger_price" in args else None,
             time_in_force=args["time_in_force"] if "time_in_force" in args else None,
             wait_for_reply=args["wait_for_reply"] if "wait_for_reply" in args else True,
