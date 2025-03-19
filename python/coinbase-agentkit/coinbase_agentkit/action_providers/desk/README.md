@@ -68,8 +68,89 @@ provider = desk_action_provider(
   )
 ```
 
+## Example Usecase
+### Prerequisite
+```
+Chatbot: python/examples/langchain-desk-chatbot/chatbot.py
+Network: Arbitrum Sepolia
+Setup: EVM Wallet with TestUSDC and Gas in wallet
+```
+
+### Get account info on DESK
+Prompt: 
+```
+get my info on desk
+```
+
+Output:
+```
+Here is your current information on the desk:
+
+### Collaterals
+- **Asset**: USDC
+- **Amount**: 22,581.56
+
+### Positions
+1. **Symbol**: VIRTUALUSD
+   - **Quantity**: 1,340.20
+   - **Average Entry Price**: 1.1028
+   - **Side**: Short
+   - **Last Updated Funding Fee**: 0.2676
+
+2. **Symbol**: KAITOUSD
+   - **Quantity**: 1,991.80
+   - **Average Entry Price**: 1.4025
+   - **Side**: Short
+   - **Last Updated Funding Fee**: 0.0515
+
+### Account Summary
+- **Account Margin**: 23,879.59
+- **Collateral Value**: 22,581.06
+- **Unrealized P&L**: 509.28
+- **Pending Funding Fee**: -789.25
+- **Pending Borrowing Fee**: -0.0000000014
+- **Account IMR**: 1,226.68
+- **Order IMR**: 0.00
+- **Position IMR**: 1,226.68
+- **Position MMR**: 390.20
+```
+
+### Place market order on DESK
+Prompt: 
+```
+market long btcusd for 0.01
+```
+
+Output:
+```
+Your market order to long **0.01 BTCUSD** has been successfully placed. Here are the details:
+
+- **Subaccount**: 0x0123456789012345678901234567890123456789000000000000000000000001
+- **Side**: Long
+- **Order Type**: Market
+- **Filled Quantity**: 0.01 BTC
+- **Average Fill Price**: 82,969.00
+- **Execution Fee**: 0.01
+- **Order Digest**: 0x0000000000000000000000000000000000000000000000000000000000000001
+```
+
+### Deposit collateral on DESK
+Prompt: 
+```
+deposit 10 usdc
+```
+
+
+Output:
+```
+Your deposit of **10 USDC** has been successfully completed. Here is the transaction hash for your reference:
+
+- **Transaction Hash**: 0123456789012345678901234567890123456789012345678901234567890123
+```
+
 ## Notes
+- All action avaliable are implemented following [DESK Python SDK](https://github.com/TradeOnDESK/desk-python-sdk/blob/main/README.md)
 - The DESK platform requires authentication with a valid Ethereum account
 - All actions return formatted JSON strings for easy parsing and display
 - Position, order, and collateral information is formatted for human readability
-- For detailed API documentation, refer to the DESK platform documentation
+- For detailed API documentation, refer to the [DESK platform documentation](https://docs.desk.exchange/)

@@ -800,6 +800,7 @@ develop = true
 
 [package.dependencies]
 cdp-sdk = "0.19.0"
+desk-python-sdk = "1.0.1"
 pydantic = "^2.0"
 python-dotenv = "^1.0.1"
 requests = "^2.31.0"
@@ -1096,20 +1097,20 @@ cython = ["cython"]
 
 [[package]]
 name = "desk-python-sdk"
-version = "1.0.0"
+version = "1.0.1"
 description = "DESK Python SDK"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 markers = "python_version == \"3.10\" or python_version == \"3.11\" or python_version >= \"3.12\""
 files = [
-    {file = "desk_python_sdk-1.0.0-py3-none-any.whl", hash = "sha256:b454c5366214973ff323ea02632ef6c83501b75b1e247ba65909bbb1189c8a35"},
-    {file = "desk_python_sdk-1.0.0.tar.gz", hash = "sha256:72c7a8d142138421e74b314b90b045cd49d77d469b968553494d1ce901ed0c82"},
+    {file = "desk_python_sdk-1.0.1-py3-none-any.whl", hash = "sha256:095f5e4a88b3a55b9592b61511cecaf5b184150c68c056e8fb4bd54bbfa44b29"},
+    {file = "desk_python_sdk-1.0.1.tar.gz", hash = "sha256:b076bc64765b1bc7b921cb37d9846e6eb2787181bae53e71d23ef12d1c2fce27"},
 ]
 
 [package.dependencies]
 eth-account = ">=0.13.1,<0.14.0"
-eth-keys = ">=0.5.0,<0.6.0"
+eth-keys = ">=0.6.1,<0.7.0"
 requests = ">=2.32.3,<3.0.0"
 web3 = ">=7.0.0,<8.0.0"
 websocket-client = ">=1.8.0,<2.0.0"
@@ -1261,15 +1262,15 @@ test = ["pytest (>=7.0.0)", "pytest-xdist (>=2.4.0)"]
 
 [[package]]
 name = "eth-keys"
-version = "0.5.1"
+version = "0.6.1"
 description = "eth-keys: Common API for Ethereum key operations"
 optional = false
 python-versions = "<4,>=3.8"
 groups = ["main"]
 markers = "python_version == \"3.10\" or python_version == \"3.11\" or python_version >= \"3.12\""
 files = [
-    {file = "eth_keys-0.5.1-py3-none-any.whl", hash = "sha256:ad13d920a2217a49bed3a1a7f54fb0980f53caf86d3bbab2139fd3330a17b97e"},
-    {file = "eth_keys-0.5.1.tar.gz", hash = "sha256:2b587e4bbb9ac2195215a7ab0c0fb16042b17d4ec50240ed670bbb8f53da7a48"},
+    {file = "eth_keys-0.6.1-py3-none-any.whl", hash = "sha256:7deae4cd56e862e099ec58b78176232b931c4ea5ecded2f50c7b1ccbc10c24cf"},
+    {file = "eth_keys-0.6.1.tar.gz", hash = "sha256:a43e263cbcabfd62fa769168efc6c27b1f5603040e4de22bb84d12567e4fd962"},
 ]
 
 [package.dependencies]
@@ -1278,8 +1279,8 @@ eth-utils = ">=2"
 
 [package.extras]
 coincurve = ["coincurve (>=12.0.0)"]
-dev = ["asn1tools (>=0.146.2)", "build (>=0.9.0)", "bumpversion (>=0.5.3)", "coincurve (>=12.0.0)", "eth-hash[pysha3]", "factory-boy (>=3.0.1)", "hypothesis (>=5.10.3)", "ipython", "pre-commit (>=3.4.0)", "pyasn1 (>=0.4.5)", "pytest (>=7.0.0)", "towncrier (>=21,<22)", "tox (>=4.0.0)", "twine", "wheel"]
-docs = ["towncrier (>=21,<22)"]
+dev = ["asn1tools (>=0.146.2)", "build (>=0.9.0)", "bump_my_version (>=0.19.0)", "coincurve (>=12.0.0)", "eth-hash[pysha3]", "factory-boy (>=3.0.1)", "hypothesis (>=5.10.3)", "ipython", "mypy (==1.10.0)", "pre-commit (>=3.4.0)", "pyasn1 (>=0.4.5)", "pytest (>=7.0.0)", "towncrier (>=24,<25)", "tox (>=4.0.0)", "twine", "wheel"]
+docs = ["towncrier (>=24,<25)"]
 test = ["asn1tools (>=0.146.2)", "eth-hash[pysha3]", "factory-boy (>=3.0.1)", "hypothesis (>=5.10.3)", "pyasn1 (>=0.4.5)", "pytest (>=7.0.0)"]
 
 [[package]]
@@ -3813,4 +3814,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "c710021a4443490d6e83d8b5580144a3753b131a79d954368654199fe15a07fc"
+content-hash = "cf80b6bab55801dedfb20c305b08fbebc96ee2cda1f9273b66d96a70fb5fd155"

@@ -36,7 +36,7 @@ def initialize_agent():
     assert chain_id, "You must set the CHAIN_ID environment variable"
 
     sub_account_id = os.getenv("SUB_ACCOUNT_ID")
-    assert private_key, "You must set the SUB_ACCOUNT_ID environment variable"
+    assert sub_account_id, "You must set the SUB_ACCOUNT_ID environment variable"
 
     # Optional
     rpc_url = os.getenv("RPC_URL")
