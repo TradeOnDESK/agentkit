@@ -64,7 +64,7 @@ provider = desk_action_provider(
         private_key="0x123"
         sub_account_id=1
         chain_id=8453
-        rpc_url="https://rpc.url
+        rpc_url="https://rpc.url"
   )
 ```
 
