@@ -19,6 +19,7 @@ python-dotenv = "^1.0.1"
 requests = "^2.31.0"
 allora-sdk = "^0.2.0"
 paramiko = "^3.5.1"
+desk-python-sdk = "1.0.1"
 
 [tool.poetry.scripts]
 check-description-length = "scripts.check_description_length:main"
