@@ -9,6 +9,7 @@ from .action_providers import (
     cdp_wallet_action_provider,
     compound_action_provider,
     create_action,
+    desk_action_provider,
     erc20_action_provider,
     morpho_action_provider,
     pyth_action_provider,
@@ -56,5 +57,6 @@ __all__ = [
     "wallet_action_provider",
     "weth_action_provider",
     "wow_action_provider",
+    "desk_action_provider",
     "__version__",
 ]
